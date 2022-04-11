@@ -1,0 +1,12 @@
+How this presentation will pan-out ? 
+1) Introduction: quick overview of the paper, and how i analize it 
+2) Key concepts --> quick overlook of the key concepts, such as: ICD (obv..), Neural Networks, RNN, CNN, t
+                    and text processing algorithms. 
+3) ICD Coding Problem -> Overview + ICD Taxonomy and EHD (electronic health document). 
+4) Model structure --> Problem definition and architecture of the system 
+5) Neural networks --> Basic neural networks + design isses. 
+6) Feature extraction --> spatial features, sequential features and issues related to coding. 
+7) integrating external knowledge 
+8) Brief overview of the public dataset
+9) Prospects --> Transfer learning, zero-shot learning, benchmarks and time complexity 
+10) conclusions. 
