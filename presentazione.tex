@@ -1,0 +1,321 @@
+Deep Neural Networks for ICD coding. 
+\part{introduction}
+\paragraph{keyconcepts}
+ICD -> International classification of Diseases -> standard for categorizing physical conditions 
+widely userd for analizing clinical data and monitoring health issues. 
+Neural Networks 
+RNN 
+CNN 
+Bag of Words 
+Tf-IDF 
+
+issues --> manual coding takes a long time and is vulnerable to errors so we want to automate 
+it via deep neural networks in ICD Automatic Coding. 
+
+Recent success of AI present an unprecedented opportunity in smar healthcare; large scale 
+data has been constantly generated during the hospitalization of patients (see big data problem). 
+This data is distributed in cyber-physical systems (HIS), to better understand this data we use 
+different modalities, annotation of clinical douments using Standardized Coding System. 
+
+ICD was developed by WHO with the aim to develop a hierarchical classification standard including diseases 
+physical conditions, disorders, external factors and clinical manifestations (boh). 
+
+Why ICD ? the codes have been used for analyzing clinical data and monitornig health issues : reporting diseases 
+collecting morbidity statistics and assisting in medical reimbursment decisions. 
+With ICD coding we can normalize a patient's hospitalization process via a sharable format. 
+
+Sadly currently ICD coding is a manual process by specifically tranied coders, taking a average of 34 minutes 
+to assign codes for each patient; precision and speed is not satisfied in te practical enviroment, it's 
+vulnerable to errors due to several uncontrollable factors --> mistakes in patient discharge summaries due to 
+variation between coders or hospitals. These errors can cause wrong bills, denial of insurance. 
+
+In the US this discrepancy could reduce 25 billion per year if coding efficency and coding accuracy are improved 
+concurrently; Many efforts have been made, developing computer-aided system to recomend candidate codes to human 
+coders in order to shorten the manual coding time and avoiding oversights for some rare diseases. 
+
+Existing strategies are roughly classified into two groups ---> Rule based and Learning Based. 
+
+Rule based approaches assist professional coders since the early 1990. The rules are made by Domain Experts 
+according to medical guidelines, and include regular expressions, logicla expressions, keywords and dictionaries. 
+This approach is simple and efficent, but impossible to expand to more general situations since it heavily 
+relies human input. 
+Recently many researchers are recasting the ICD Coding problem as a text classification problem, they 
+extract features thorugh Bag of Words counts or Tf-IDF methods (piccolo spunto di ML), implementing ML methods 
+to build classification models for code assignemnt, such as --> K-Nearest Neighbors, logistic regression 
+random forests and sSVM. 
+Larkey et al suggested and ensemble method incorporating KNN Bayesian classifiers and revalence feedback to encode 
+patient records. 
+Despite the efforts of all this methods researchers belive that there is still large room to improve the 
+effectiveness (studio effectiveness). 
+There has been increasing attention on applying deep neural networks to ICD coding (Imp!) such as RNN and CNN 
+porizone di spiegazione. 
+
+These approaches could extract and classify the semantic features jointly, reducing the requirement of medical
+knowledge during the feature selection stage, although these methods yield better performance then traditional 
+methods to a certain extent, they are far from automatic ICD coding without human intervention. 
+\subparagraph{Challenges}
+Challenges : 
+1) ICD Taxonomy --> extremely large label space --> 24478 unique disease classification in ICD9. 
+Big problem of data sparsity and scalability, the labels exhibit a power-law 
+distribution. Owing to the rarity of diseases a few codes are corresponding to common 
+diseases, few codes are corresponding to common diseases. 
+MIMIC dataset : 58k samples only 1706 codes appear more than 50 times, 15610 codes neve appear. 
+2) Electronic health documents show the heterogeneity of the data, the average length of discharge summaries 
+is over 2000 tokens, but only a limited number of tokens are associated with a particular ICD code. 
+eletronic health documents have distinct writing styles in different departements and organizations 
+not as formal as ICD diagnostic description. 
+3) External knowledge may benefit automatic ICD coding, this knowledge can coome in two sources : 
+the first one is ICD coding structures and guidelines, the taxonomy follows a tree-like shape 
+this hierarchical knowledge may reduce label space, and ensure the functional integrity of the classification. 
+the second  one is a third-pary knowledge bases such as Medical Subject Headings, Systematiezed Nomenclature 
+of Medicine (SNOMED). 
+4) Human interpretability is crucial to clinical practice, but the end-to-end deep neural networks have 
+the black box issue (what is ?), this predictions must be supported and trusted by professional coders. 
+\part{ICD Coding Problem}
+ICD Coding Problem 
+The ICD coding problem is to annotate heterogenous medical health records using ICD codes. 
+\paragraph{Taxonomy}
+ICD Taxonomy is systematically introduces, which intends to help the reader gets a better understanding 
+of the research challenges for successfully applying deep neural networds for ICD coding. 
+
+ICD Taxonomy 
+We know the ICD is the most popular medical coding ontology worldwide; it converts the diagnosis of diseases 
+and other health problems into alphanumeric codes so that data can be stored retrived and analyzed. 
+This taxonomy follows a tree-linke hierarchical structure to ensure the functional and structural integrity 
+of the classification. ICD-10 has 22 chapters in total with a 6 character convention. the first char shows 
+disease patterns (injury or infections) the last two characters signify a particular diagnosis. 
+4 example codes that begin with I00, I01, and I02 specify the categoryof acute rheumatic fever. 
+THis hierarchical structure idicates teh parent-child relationship and sibling relationship between codes 
+of the same level. Upper levels rapresent general diseases, while the lower-level nodes indicate diseases that 
+are more specific; with this hierarchy we can capture the mutual exclusion of some codes; the  code  assignment
+focuses more on physical examination values.
+In the past 150 years, ICD has experienced lengthy evolution and is regularly revised to adapt to changes in the medical field. 
+
+\paragraph{Electronic Health document}
+Electronic Health documents 
+ICD is mainly used to classify diseases, symptoms and injuries, and it is designed to adress the needs of a broad 
+spectrum of use cases --> mortality, morbidity and epidemiology. 
+The medical health records show heterogeneity in the format and content, given a electronic health document 
+we summarize several characteristics and difficulties for ICD coding : 
+1) Distinct writing styles --> clinic notes are not as formal as the diagnostic description of the ICD code. 
+doctors in different departements and organizations may have different writing styles; with many abbreviations 
+synonyms etc... These narratives lead to ambiguity and misunderstandings for ICD codes. 
+2) Irrelevant informations --> ICD code descriptions tend to be more abstract in order to caputre multiple cases 
+which gives the coding task a high degree of complexity. 
+3) long Document --> traditional sequence models are ineffective of even impossible to deal with such long sequences. 
+according to the severity and complexity of diseases the number of tokens obeys a normal distribution. 
+
+Besides the characteristics of thext documents we analyze the code distribution of the whole dataset. 
+// visualizzazione del grafico. 
+
+\part{Model structure}
+
+Basic model structure 
+The traditional text classification model is not suitable for automatic ICD assignemnt, we need to 
+formulate the ICD coding task and offer an end-to-end framework. 
+From the perspective of TASK INTEGRITY -> the theories of word embedding and deep nn are introduced in detail. 
+\paragraph{problem definition}
+
+Problem definitions --> ICD coding is modeled as an extreme multi-label classification task (intro modello). 
+the objective is to learn a classifier that is able to automaticallu annotate clinical documents with 
+the most relevant subset of labels from an extremely large number of ICD Codes. 
+learing a predictive function f given a training set --> S ={(Ti,Yi)}^m i, m = number of samples, Ti is the 
+text sequence, and Yi is the labels. 
+This multi-label classificaiton function is --> f : w -> 2^y. con w è il word-space. 
+We use Kj = {0,1} to denote teh categorical infomration of Yj. 
+
+The ICD coding problem is similar to auxiliary diagnosis but much more difficult than it; the auxiliary diagnosis 
+is a multi-class classification problem rathern then a multi-label classification problem (why?). 
+With the goal to carray out differential diagonses among similar diseases. 
+Theese diseases are usually belonging to the same category and are exclusive to each other, moreover the label 
+space of ICD coding is much larger the auxiliary diagonisis. 
+Last but not least ICD coding requires the entire documents of patient's hospitalization process, so fusion of multi 
+modality data plays an important role in ICD coding.
+
+\paragraph{architecture}
+General Architecture. 
+The basic module is a text classifier, its ojective is to learn document representation from health records. 
+This recors are long text, the informative words are SPARSE and distributed in different notes; filled with 
+redundant information, how to extract semantic features from the full document is a important issues. 
+The second module aims at utilizing label dependency to facilitate the learing procedure. 
+The third module is to integrate expert knowledge for better interpretability, the official ICD guidelines 
+provide each code with a short text description and a tree structure on all codes. 
+
+Input Layer 
+The input of the framework is multi-source data, including long text, short text, co-occurence graph three structure
+and thid-party knowledge bases. 
+The standard input is free text int the conent of electronic medical records, teh full document is the first
+preprocessed as tokens, the token sequence T = {t1, t2, .... ,tn} with N = length of sequence. 
+A range of pre-processing techniques are adopted to minimize the noise in the initial information 
+such as regular expresison matching and Standardization. 
+Conventional method include deleting stop-words and low-frequenct words, lowercase converting and replacing 
+unknown words. Reducind the document via truncate the training dimension. 
+
+representation Layer --> after the input layer the multi-modality data requires distinct representation models. 
+The texts usually use word embedding to transform human language into low dimensional vectors. 
+Word2Vec is a conventional embedding technique and maps into a collection of finite decimal on the real number. 
+Let E stands for embedding matrix. The token sequence T isdenoted asX={x1,x2,x3,...,xN}. 
+Token Ti corresponds to a specific vector Xi by looking up E, where i is the indexof the word.
+The co-occurrent relationship can be represented as a graph. 
+The graph is denoted as G= (V,E), where V is the set of l labels, and E is the set of edges.
+The edges indicatewhether two labels appear in the same health record or not.
+The adjacency matrix{A=Aij}li,j=1of graph G contains non-negative weights associated with each edge.
+
+Feature Layer 
+This layer utilize various deep neural networks to extract multi-granularity features. 
+CNNs can capture the spatial relations from long text, while RNNS and its variants are suitable for sequential 
+features from short texts. GNNs are good at learning semantic connections from hierarchical tress, usefull 
+to generate latent features for tail samples and labels . 
+
+// codice feature and output layers. 
+
+Common components 
+2 components : 
+1) The first key component is how to effectively represent multi-modality data 
+2) is how t oextract semantic features using Deep Neural Networks 
+
+Word embedding --> Text transformed to a proper format that is favorable to numerical analysis, this technique
+represents words in a distributed manner and at the same time ensures the low dimensional vectors contain semantic information. 
+
+// Word2Vec 
+// fastTExt 
+// BERT 
+
+Graph Embedding 
+Graph embedding are the transformation of property graphs to a set of vectors; it should capture a graph topolgy 
+vertex-to-vertex relationship and other relationships including informations about graphs and vertices. 
+
+\part{DeepWalk} 
+Used for learning latent rapresentations of vertices in a network, it uses local informations obtained from truncated random walks treating short random walks as the equivalent of sentences. 
+The deep walk operates in few steps -> first for each node several random steps are executed from that node, then each walk 
+is treated as a series of node-id strings. 
+Given a list of these sequences, the skip-gram algorithm trains the word2ve model on these string. 
+
+\part{Node2Vec}
+\paragraph{intro}
+This part learns low-dimensional representations for nodes in a graph by optimizing a neighbourhood preserving objective, similar to DeepWalk node2vec preserves high order proximity of occurence of subsequent nodes in fixed length random walks, with the crucial difference from DeepWalk is that node2vec employs baiased-random walks from Deepwalk is that node2vec imploys a trade-off between breadth-first and depth-first graph searches and hence produces Higher-quality and mode informative embeddings than deepwalk. 
+The Aim is to choose the right balance enables node2vec to preserve a community structure as well as structure between equivalence nodes.
+
+\paragraph{Basic Neural networks}
+Deep neural networks have become a milestone techniques and achived the most advanced performance in text classification tasks. 
+CNN --> Convolutional Neural Networks 
+This kind of neural networks are widely used in ICD coding because they can learn \textbf{global features} from lonh texts automatically. 
+The elemntal mechanisms of CNN are convolution and pooling; the convolutional process is the sum of all the weight of the kernel and its correspondig element vector on the input document it can be expressed 
+by the formula --> conv(x) = \sum{i}^{p*q}w_i*x_i. 
+
+The multi-dimensional feature can be optained by using multiple-convolution kernels, also using padding to fill 0 around the image to keep the dimension of the feature map and the original image remains unchanged.
+
+\paragraph{Recurrent Neural Networks}
+RNN are used to capture semantic featres continuosly, using RNN we have feed-forward neural network models that transfer data over time stages.
+For  each  part  of  achain,  RNNs  perform  the  same  operation,  with  the  resultbeing dependent on the previous computations. 
+
+\paragraph{Graph Convolutional Networks}
+We can con-struct a graph to represent the correlations, and then applyGCNs to learn high-order neighborhoods information.GCNs encode the graph structure directly using a neuralnetwork model. They aim at learning a function mapping,which  enables  every  node  in  the  graph  to  aggregate  thefeatures of itself and its neighbors.
+GCNs was classified into different groups, spatial-based andspectral-based. The spatial-based model aggregates featureinformation from the neighborhood by graph convolution.In  the  spectral-based  model,  a  filter  defines  graph  con-volution  from  the  standpoint  of  graph  signal  processing,which  removes  noise  from  the  graph  signal.
+A practical ICD coding system needs good interpretabil-ity.  GCNs  encoding  ICD  guidelines  may  provide  someinput-independent explanations, for example, the meaningof  hidden  states  helps  understand  the  whole  predictionprocedures.
+
+\paragraph{Generative Adversarial Networks}
+ICD  coding  suffers  a  long-tailed  label  distribution  andnoisy document inputs. For example, more than half of ICD-9 codes never occur in the medical dataset MIMIC III.
+Evenfor a specific code, different doctors have personal writing habits and non-standard expressions. In order to strengthenthe  model  robustness,  GANs  are  able  to  generate  latentfeatures for tail labels.
+GANs  contain  two  networks  that  compete  with  eachother.  The  generation  networkGsuccessive  captures  theprobability  distribution  of  the  actual  data,  and  generatesnew samples by adding random disturbances to the input.To test the factuality of data, the discriminator networkDobserves both true and false data trying to distinguish between fake and real feature extractor model. 
+For  the  ICD  coding  problem,  GANs  not  only  generatelatent features for few-shot labels, but also can distinguishthe  useless  latent  information,  so  as  to  improve  modelstability.
+
+\paragraph{Desing issues and Solutions}
+To  better  appraise  medical  records,  human  coders  in  hos-pitals  assign  the  unstructured  records   to  ICD  conceptswithin  a  standardized  coding  and  classification  system.ICD  taxonomy  has  an  extremely  large  code  space,  whichrequires human coders to master specialized skills such asmedical knowledge, coding rules, and clinic terminologies. Manual encoding is time-consuming, error-prone, and expensive.
+In order to speed up manual encoding and avoid over-sights  for  some  rare  diseases,  researchers  and  engineers devote  themselves  to  automatic  ICD  coding,  which  rec-ommends  code  candidates  to  human  coders.  Deep  neural networks can provide all code candidates at one time, basedon the entire medical record. There are several challenges todesign learning-based models.
+	1) Complex feature extraction --> the length of EHR is much longer that of articles in natural language datasets, as the length of the EHRs grows the probability of information loss increases. 
+	2) Biased Label distribution --> due to the rarity of the diseases the majority of ICD codes have 
+	either very few orno labeled samples. Biased label distribution results in lowaccuracy  of  low-frequency  labels.
+	3) Integrating external knowledge --> The challenge is how to model the code hierarchy to capture the mutual exclusion and co-occurrence between codes.
+	4) Model interpretability and transparency --> Human iterpretability  is  necessary  if  deep  neural  networks  areapplied in clinical applications. At least, the deep learningmodels could provide explanations that help human codersunderstand  the  relationship  between  ICD  codes  and  most related evidence.
+	
+\paragraph{Complex feature extraction}
+Feature extraction transforms the raw data into a group of features with obvious physical or statistical significance. It is committed to reducing data dimensions and accelerating calculations.  Meanwhile,  it  can  discover  more  meaningful potential  variables  and  gain  a  deeper  understanding of the raw data.
+Let's summarize in 4 different sub-sequences : 
+\subparagraph{sequential features}
+The sequential feature indicates where the events different  times  affect  each  other.  The  order  of  words  is  the essence of the textual data, and the preceding words highly affect  the  subsequent  expression.
+RNN passes input data between neurons through  an  internal  hidden  state  recursively,  thereby  each word can capture the entire sequence information.
+\subparagraph{Spatial Features}
+The spatial feature implies that the text fragments in health records  related  to  ICD  codes  are  globally  distributed.  An unstructured health record usually consists of thousands of words, along with plenty of noisy and irregular expressions.The  length  of  input  data  greatly  improves  the  dimension of  text  representation.  It  is  challenge  that  a  model  learns coding evidence related to code labels from the full text. 
+Deep  neural  networks  could  integrate  multi-level  features.  Due  to  applying  a  non linear  activation  function,feature extraction from shallow layers to deep layers is al-most irreversible, which causes information loss from input to  output. 
+\subparagraph{Multi-scale Features}
+The multi-scale feature refers to the semantic fragments with various  patterns.  CNN  uses  kernel  filters  to  extract  local features. 
+\subparagraph{Writing styles}
+Writing style shows the textual format and individual writing habits. The non standard diagnosis description is written in a different style than the standard medical concept. 
+ Mouet al. used N-gram matching neural network to matchthe personal-style description and the formal diagnosis. Thismethod  generates  similarity  matrices  between  n-grams  byembedding  adjacent  characters  into  n-gram  vectors. 
+
+\subparagraph{(Multiple Language)}
+ICD has been translated into more than 40 official languages.Although the health documents in multiple languages share the same writing specifications and basic structure, doctors of  countries  also  have  personal  writing  habits  and  non-standard  expressions.  Mario  et  al.  [60]  proposed  a  cross-language approach that can merge different languages, resulting in bias reduction in code distribution. An advantage of using deep neural networks is that we can easily obtain anew model in one language by fine-tuning a good model in another language.
+For  an  end-to-end  framework,  we  should  pay  more attention  to  pre-processing  and  representation  when  the models  are  transferred  between  multiple  languages.  For example,  the  semantic  meaning  of  a  Chinese  word  is  related  to  the  meanings  of  its  composing  characters.  It  has the  issues  of  character  ambiguity  and  non-compositional words.  As  a  result,  it  requires  word  segmentation  in  the Chinese language  which can be skipped in the English language.
+
+\paragraph{Biased label Distribution}
+ICD coding has high data sparisty associated with unbalanced label distribution; low-frequency diseases tend to be grouped but rare diseases may be individually classified if necessary. 
+A great challenge is how to assign the infrequent codes, ICD  hierarchical  structure  is  helpful  to  reconstruct  the keywords  and  generate  semantic  features  for  the  unseen codes.   Rios   et   al.   [63]   transferred   external   knowledge sources to improve the predictive ability of infrequent codes. Marilisa  et  al.  [66]combined  a  set  of  logistic  regression  classifiers  and  CNN to solve severe data sparsity. They also provided evidence to  prove  that  the  imbalance  issues  are  well  addressed  by a  dedicated  modelling  approach. 
+
+\paragraph{Integrating external knowledge}
+External knowledge could benefit automatic ICD classification.  Combining  deep  learning  with  this  knowledge,  such as  coding  rules,  hierarchical  structure,  the  relationship of inclusion  and  exclusion,  bundling  and  unbundling  cases,and third-party libraries is a challenging issue.
+
+\subparagraph{ICD hierarchy}
+The  understanding  of  hierarchical  structure  is  helpful  to predict  ICD  codes.  The  distributed  representation  of  tree structure  investigates  how  to  catch  the  hierarchical  association  between  codes  and  the  meanings  of  each  code  at the same time, The GCNs  are  used  to  capture  relationships  and  correlations to  train  a  better  classifier.  Each  node  dynamically  updates information by combining information from its child nodes and  parent  nodes. 
+Hierarchical  classification  takes  advantage  of  tree-likestructure  to  assign  ICD  codes  on  different  granularities.Ning  et  al.  [69]  proposed  a  hierarchical  coding  algorithm.The algorithm searches the area with the highest similarityto  the  disease  from  the  root  and  then  searches  the  leaf nodes  along  this  area  until  it  finds  the  leaf  node  with  thehighest  similarity.  Unlike  the  flat  approach  scanning  overall  subcategory  codes,  hierarchical  classification  examines Hierarchical  classification  takes  advantage  of  tree-likestructure  to  assign  ICD  codes  on  different  granularities.Ning  et  al.  [69]  proposed  a  hierarchical  coding  algorithm.The algorithm searches the area with the highest similarityto  the  disease  from  the  root  and  then  searches  the  leafnodes  along  this  area  until  it  finds  the  leaf  node  with  thehighest  similarity.  Unlike  the  flat  approach  scanning  overall  subcategory  codes,  hierarchical  classification  examines only section codes and category codes within a section code,and  subcategory  codes  within  a  category  code.  
+
+\paragraph{Code relationships}
+Besides the ICD hierarchy, latent features extracted from theentire  dataset  are  helpful  to  enhance  the  accuracy  of  ICDcoding. Some diseases are concurrent, so their codes usuallyappear  at  the  same  time  in  health  records.  For  example,E78.200 (Mixed hyperlipidemia) and I10.x00 (hypertension)have  a  causal  relationship  with  each  other.  Schfer  et  al.[70]  used  the  apriori  algorithm  to  find  association  rulesand  label  co-occurrences  in  autopsy  report.  It  iterativelysearched  layer  by  layer  to  find  frequent  code  sets. Mutual  exclusion  is  another  relationship  among  codesin  the  ICD  taxonomy.  Sibling  exclusion  is  that  two  codesbelonging to the same parent category cannot exist together.For   example,   if   code   O44.000   (Placenta   previa   withoutbleeding) is assigned to a patient, it is unlikely to assign thecode O44.100 (Placenta previa with bleeding)  to the patientat the same time.
+Cao et al. [26] used the hierarchy of hyper-bolic code embedding to represent the code level to avoid
+prediction  contradiction.  After  embedding  the  ICD  codesinto the hyperbolic space, the top-level codes are placed nearthe origin and low-level codes near the boundary, which canbe reflected via their norms.
+
+\paragraph{Thir party Knowledge}
+External knowledge may supply useful information for ICDcoding tasks. Almagro et al. [73] introduced SNOMED clin-ical term representation to evaluate the semantic similarityof code description and discharge summary. Chen et al. [74]utilized  the  data  structure  of  WordNet  to  aids  the  codingof ICD-11. In  terms  of  data  fusion  methods,  the  researchers  ex-plored  various  approaches.  Teng  et  al.  [5]  used  graph  em-bedding  to  introduce  knowledge  graph  into  the  model.Yassien  et  al.  [45]  combined  evidence  from  four  differentsources. For each source, the data is first trained separatelyby independent feedforward neural network, and then thefour prediction results are integrated through an assessmentmechanism. 
+
+\paragraph{Rule Based approach}
+raditional   computer-aid   coding   systems   usually   applyrule-based  approaches.  The  rule-based  methods  heavilydepend  on  the  keywords  summarized  by  expertise.  Themodels  match  the  keywords  by  logical  expressions  [7],regular  expressions  [66],  dictionaries  [11],  and  sometimesrequires  man-machine  interaction  especially  on  bundlingand unbundling cases.
+Goldstein  et  al.  [77]  generated  four  rule  sets,  such  aslexical element rules, negative rules, uncertainty rules, andsynonyms  rules,  among  them  negative  rules  and  uncer-tainty  rules  can  eliminate  false  positives.  With  the  rules,string  matching  or  regular  matching  are  used  to  querykeywords  or  key  phrases  to  assign  ICD  codes.  
+The  rule-based  methods  are  simple  and  efficient,  buthave  several  limitations  for  practical  usage.  Firstly,  as  theversion  of  ICD  updates,  the  name  and  number  of  codeschange  greatly,  it  is  extremely  expensive  to  acquire  fullkeywords for every code. Secondly, the standard keywordscome from code descriptions, but the matching objects arediagnoses  in  medical  records,  which  are  affected  by  indi-vidual  writing  habits.  Due  to  the  difficulty  of  quantifyingrules  and  matching  textual  records,  the  accuracy  of  therule-based  approach  is  not  high.  Thirdly,  the  rule-basedmethods  require  querying  code  one  by  one,  ignoring  the code  correlation  in  the  same  medical  record.  It  can  notprovide an end-to-end recommendation, increasing manual intervention during the whole coding process.
+Based on this observations many recent pices of research investigate the data-driven approach in which the coding rules, or rather features, are learned from massive textual data. 
+With the advantages of the features that can be easily quantified. 
+Combining deep learining with coding rules or other expert knowledge is a very important and challenging subject. 
+
+\paragraph{Model interpretability}
+Model  interpretability  can  help  human  coders  understandthe  most  useful  evidence  before  making  a  decision.  As  ageneral  end-to-end  framework,  the  input  of  deep  neuralnetworks  could  be  concise  or  detailed.  The  former  onlycontains  discharge  diagnosis  and  procedure  descriptions,which are the basic information about one admission. Thelatter  covers  the  entire  information,  including  complaint,current  medical  history,  procedure,  medication.  Both  ofthem  require  interpretability  to  explain  the  reason  why  aspecific code is chosen, because the diagnosis and ICD codesin one admission have a many-to-many association.We  take  a  concise  case  as  an  example.  If  the  inputonly  contains  diagnosis  and  procedure,  the  output  I08.001(Rheumatic  mitral  valvular  disease  combined  with  aorticvalvular disease) is determined by three diseases (rheumaticheart disease, mild aortic stenosis, and severe mitral steno-sis) and one procedure (mitral valve replacement surgery).If full-text is applied as input, it is extremely important toprovide  meaningful  evidence  for  practical  usage,  becausethe entire documents not only provide abundant knowledgebut also contain confusing information. The human codersneed  to  understand  the  dependency  between  codes  andtheir relevant evidences.
+2 different approaches : 
+achine learning models, feature selec-tion  is  a  commonly  used  approach  to  quantify  the  impor-tance  of  manual  features  [78].  For  deep  learning  models,most studies apply an attention mechanism to highlight thefragments of text closely related to ICD codes [79].Per-label  attention  mechanism  is  widely  investigatedby  many  researchers Mullenbach  et  al.  [81]  chooses  k-grams  that  are  closelyrelated  to  each  label  from  the  entire  health  records.  Themodel  computes  the  matrix-vector  product  of  the  vector representation  of  the  document  and  a  vector  parameterof  code  description  and  then  passed  the  resulting  vector through a softmax operator to obtain the effective informa-tion distribution of the corresponding code. 
+
+Various  attention  mechanisms  provide  the  connectionsto  explain  how  these  end-to-end  neural  networks  work.The  weight  of  the  attended  segments  are  visualized  tohelp  human  coders  validate  the  coding  results.
+Although  there  are  some  efforts  on  extracting  most  re-lated  keywords  from  the  input  document  to  provide  ex-planations, attention-based interpretability is only validatedcase  by  case,  lacking  methods  and  metrics  to  perform  the large-scale evaluation. As a result, it is particularly impor-tant to unveil the neural network method.
+
+
+\paragraph{Solution comparison}
+1) A  single  network  structure  cannot  simulate  the  ICDcoding  process  well.  The  current  implementations  of-ten  apply  a  combination  of  different  networks  to  dealwith  multiple  issues.  CNN  and  its  variants  stand  outin feature learning with appealing characteristics, suchas  sparse  local  connection,  weight  sharing,  and  down-sampling.  RNN  and  its  variants  can  capture  semanticfeatures  continuously.  Especially,  the  LSTM  and  GRUovercome  the  gradient  vanishing  problem  caused  byRNN.  GCN  is  often  used  to  mine  co-occurrence  andmutual  exclusion  between  codes. 
+2) Word2Vec is the most used method for word embeddingin ICD coding tasks. Recently, some literature used BERTas contextualized word embeddings, which depends onBERT’s  good  word  space  embedding  ability.  Sanger  etal. [83] used BERT and BioBERT on a downstream ICDcoding task to improve the representation results. Clinical BERT [84] fine-tunes the BERT model on MIMIC-IIIdatasets and applies it to other medical tasks.
+3) The  attention  mechanism  generates  a  probability  dis-tribution  for  features,  which  aids  models  to  pay  moreweight  to  important  features.  Compared  with  othermodels  in  [19]  and  [62],  the  attention-based  modelsobtain better performance, and the attention mechanismis considered as an essential component of deep neuralnetwork structure.
+
+\part{Public Dataset}
+\paragraph{Data}
+The  basis  for  successfully  applying  deep  neural  networksto  ICD  coding  is  high-quality  data.  As  the  ICD  exists  in43  languages,  human  coders  must  use  their  non-standardexpressions to adapt to the most recent revision. Just 65% ofpeople  agreed  with  independent  re-coding  [85].  For  betterdata  quality,  further  validation  is  necessary  to  process  af-ter code assignment in hospitals. Some organizations havepublished their datasets for researchers. In this section, wepresent several publicly available datasets as a guideline forresearchers.
+
+\part{prospects}
+\paragraph{intro}
+Despite the fact that neural networks have achieved successin ICD automatic coding, some aspects still need further in-vestigation.
+
+\subparagraph{Transfer Learning}
+Transfer learning from differen scenarios --> Recently,  theneural  network  models  are  trained  to  learn  the  datadistribution through a large number of labeled samples.Most of the works involve English languages and ICD-9versions due to the public MIMIC data set. These deeplearning models show a particular vulnerability if non-English  languages  or  new  ICD  revisions  are  adopted.
+furthermore patient's illnesses are not always evenly distributed across different hospitals; therefore datasets from different enviroments do not have the same distribution and features need to be unified from the original dataset. 
+Transfer learning uses known domaininformation  (source  domain)  to  solve  problems  in  re-lated domains (target domain). Therefore, using transfer learning is a meaningful way to increase the generaliza-tion of automatic ICD coding.
+
+\subparagraph{Zero-shot learning}
+. In the MIMIC dataset,  15,610  out  of  24,478  labels  never  appear  in  thetraining data. Therefore, an important mission of auto-matic  ICD  coding  systems  is  to  remind  human  codersnot to forget some rare diseases. Zero-shot learning forrare  diseases  will  be  a  fruitful  area  for  future  work.Future investigation is required to extract code-specificlatent  features  using  the  hierarchical  structure  of  ICD taxonomy.
+
+\subparagraph{Multi-language benchmarks}
+Comparedwith  other  clinical  informatics  tasks  using  learning-based  methods,  many  works  of  automatic  ICD  codinguse  their  own  private  data  set.  The  development  ofalgorithms  is  hampered  by  the  lack  of  widely  agreed-upon reference benchmarks, because the existing modelsare difficult to be compared with each other, and verifiedby external parties
+
+\subparagraph{Man-machine interactive ICD coding}
+ For med-ical  safety,  most  computer-aided  coding  systems  needhuman  intervention  to  make  the  final  coding  decision.In  the  future,  a  practical  man-machine  interaction  sys-tem  needs  to  optimize  the  workflow  of  ICD  coding.By  viewing  the  interpretable  evidence  of  ICD  codes,the  system  suggests  human  coders  to  the  most  similarICD  code  candidates.  Human  coders  are  responsiblefor reviewing candidate codes and resolving confusingcoding cases.
+
+\subparagraph{Time complexity}
+The  numberof  ICD  codes  keeps  increasing  as  the  version  updates,as a result, the model size can be extremely large, whichleads to slow training and prediction. The existing ICDcoding models mainly focus on prediction accuracy butignore  model  efficiency.  Some  models  with  low  timecomplexity  may  benefit  ICD  coding.  The  state-of-the-art  tree  methods  [99],  [100]  usually  obtain  low  timecomplexity,  because  it  divides  the  original  large-scaleproblem  into  a  sequence  of  small-scale  sub-problemsby  hierarchically  partitioning  the  instance  set  or  thelabel  set.  This  idea  could  be  easily  adopted  by  ICDcoding problem, the label space of which has a strict treestructure.
+
+\subparagraph{ICD Taxonomy}
+he  ICD-9  and  ICD-10  havebeen  widely  used  by  member  states,  but  the  revisionICD-11  is  still  on  trial  by  a  very  limited  number  ofhospitals. Consequently, it does not accumulate enoughdata for data-driven models. Note that ICD-11 provides more complicated coding structures and guidelines formedical coding, so the amount of data required to trainan accurate model is much more than that required byICD-9  and  ICD-10.  To  our  best  knowledge,  no  ICD-11  datasets,  public  and  private,  are  available  for  re-searchers. 
+
+\part{conclusions}
+Although  automatic  ICD  coding  hasmore  benefits  than  manual  coding,  the  specificity  of  ICDtaxonomies and electronic health documents presents somechallenges. Therefore, we first clarify a formal definition forICD coding from the perspective of deep learning, and thensystematically review existing literature on how to design adeep neural network to deal with four main challenges ofthe ICD coding task. We have listed a series of public datasets to help researchers who intend to compare their meth-ods  with  baseline  models.  Although  these  SOTA  methodshave better performance than traditional methods to someextent,  they  are  far  from  automatic  ICD  coding  withouthuman  intervention.  Stronger  evidence  still  needs  to  beprovided as medicine is a rigorous field. It is very importantto  further  improve  the  generalization  and  interpretabilityof deep neural networks. It is also important to study moreefficient approaches that concentrate on improving few-shotcodes  for  rare  diseases  and  to  understand  the  diversity  ofterminology.  
