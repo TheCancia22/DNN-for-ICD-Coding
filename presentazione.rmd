@@ -1,0 +1,72 @@
+---
+title: "Deep Neural Networks for ICD Coding"
+output: ioslides_presentation
+date: '2022-04-11'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rmarkdown)
+```
+
+## Abstract
+
+ICD is a standard calssification of Diseases used to categorize physical 
+condtions, widely used for analizing clinical data and monitoring health issues.
+Manual ICD takes a long time and is vunerable to errors, so researches pay more 
+attention to the application of deep neural network coding. 
+
+## Key Concepts
+
+  1. ICD Coding
+  1. Multi-label classifications 
+  1. Deep Neural Networks 
+  1. Electronic health recors 
+  1. Model Interoperabilty 
+<!-- end of list --> 
+
+## Recent developements
+
+Recent success of AI present an unprecedented opportunity in smart ealthcanre. 
+Large scale data has been constantly generated during the hospitalization of 
+patients (the Famous BigData Problem!); data are distributed into different 
+cyber-physical systems, so we need a way to Summarize everything 
+into a/some Models !
+
+## Why ICD ? 
+
+ICD coding can normalize a patient's hospitalization process to a standardized,
+uniform and sherable format, its widely adoption becomes a key element to guide 
+health care decisions and cut administrative costs at the local to worldwide levels. 
+
+ Issues ? 
+  Human coders (sadly) are not that precise, it takes a average of 34 minutes
+  to assign codes for each patient; this type of coding is vulnerable to errors 
+  due to several uncontrollable factors -> such as mistakes in patient discharge 
+  summaries, variation between coders or hospitals. 
+  
+What does this mean ? 
+these errors can cause wrong bills, denial of health insurance payments and 
+underpayments. 
+Example --> a human coder chooses an ICD code for ”collapsed lung” (J98.100) 
+instead of the one for ”atelectasis” (J98.101), the discrepancy could mean a 
+bill difference of thousands of dollars. 
+
+### Case of Study --> USA
+
+In the US, the financial investment could reduce **25 billion** 
+per year if coding efficiency and coding accuracy are improved. 
+
+## How can we improve this ? 
+
+Researchers and engenieers have tryed to develop various computer aided systems 
+to recomend **candindate codes** to human coders, trying to imporve the effectiveness
+and precision of manual coders. 
+
+We can classify the existing strategies in two groups: 
+
+    1. Rule-Base 
+    1. Learning based 
+    <!-- end list --> 
+
+
