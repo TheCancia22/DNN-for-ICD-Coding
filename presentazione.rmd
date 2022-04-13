@@ -4,7 +4,7 @@ output:
   slidy_presentation: default
   beamer_presentation: default
   ioslides_presentation: incremental :yes
-date: '2022-04-11'
+date: '2022-04-13'
 editor_options:
   chunk_output_type: inline
   markdown:
@@ -25,6 +25,7 @@ issues. Manual ICD takes a long time and is vulnerable to errors, so
 researches pay more attention to the application of deep neural network
 coding.
 
+
 ## Key Concepts
 
 1.  ICD Coding
@@ -34,6 +35,7 @@ coding.
 5.  Model Interoperabilty 1- ML Algorithms (BOW, TF-idf)
     <!-- end of list -->
 
+
 ## Recent developements
 
 Recent success of AI present an unprecedented opportunity in smart
@@ -42,9 +44,15 @@ hospitalization of patients (the Famous BigData Problem!); data are
 distributed into different cyber-physical systems, so we need a way to
 Summarize everything into a/some Models !
 
+The challenges in Big Data are the real implementation hurdles. These require immediate attention and need to be handled because if not handled then the failure of the technology may take place which can also lead to some unpleasant result. Big data challenges include the storing, analyzing the extremely large and fast-growing data.
+
+Some of the Big Data challenges are:
+
+Sharing and Accessing Data,Privacy and Security,Quality of data,Fault tolerance and scalability.
+
+
 ## What are neural networks ? 
 
-![](G:\uniud 2021\data and ealth\presentazione\immagini\DNN.PNG)
 
 Neural networks are a subset of machine learning algorithms, their name and structure 
 are inspired by the human brain mimicking the way that biological neurons singal to one another. 
@@ -57,7 +65,7 @@ These kind of network rely on training data to learn and improve their accuray o
 
 But how do they work ? 
 Think of each individual node as its own linear regression model, composed of input 
-data, weight, bias and output. Developing the formula --> ![](G:\uniud 2021\data and ealth\presentazione\immagini\summatory.PNG)  
+data, weight, bias and output. Developing the formula -->   
 
 Once an input layer is determined, weights are assigned. These weights help determine the importance of any given variable, with larger ones contributing more significantly to the output compared to other inputs. All inputs are then multiplied by their respective weights and then summed. Afterward, the output is passed through an activation function, which determines the output. If that output exceeds a given threshold, it “fires” (or activates) the node, passing data to the next layer in the network. This results in the output of one node becoming in the input of the next node. This process of passing data from one layer to the next layer defines this neural network as a feedforward network.
 
@@ -176,16 +184,6 @@ The ICD Coding problem is to annotate heterogeneous medical health records using
 Given this problem we must introduce the taxonomy of ICD and some characteristics of medical healt records 
 so we can get a better grip of understanding the challenges for successfully applying Deep Neural Networks. 
 
-## ICD Taxonomy 
-
-We know the ICD is the most popular medical coding ontology worldwide; it converts the diagnosis of diseases 
-and other health problems into alphanumeric codes so that data can be stored retrived and analyzed.
-This taxonomy follows a tree-linke hierarchical structure to ensure the functional and structural integrity 
-of the classification.
-For practical reasons, medical analysis requires six-character ICD codes such as statistical health trends 
-insurance claims and  clinical decision support systems (CDSS), these **HUGE** label space greatly raises the 
-difficulty of ICD coding. 
-  ![image](G:\uniud 2021\data and ealth\presentazione\immagini\ICD taxonomy.PNG)
 
 ## Electronic health document 
 
@@ -204,7 +202,6 @@ we summarize several characteristics and difficulties for ICD coding :
 
 Besides the characteristics of thext documents we analyze the code distribution of the whole dataset
 
-  ![](G:\uniud 2021\data and ealth\presentazione\immagini\frequency distribution.PNG)
 
 This graph is developed using MIMIC III dataset with 58976 discharge summaries, showing a unbalanced code distribution.
 
@@ -220,9 +217,7 @@ Our **objective** is to lear a classifier that is able to automatically annotate
 It learns a predictive function *f* given a training set: $S={(T_{i}, Y_{i})}^{m}_i$ where m is the number of samples 
 $T_i\in w$ is the text sequence and $Y_i \in Υ$ is its corresponding labels. 
 
-## Architettura generalizzata 
-
-  ![](G:\uniud 2021\data and ealth\presentazione\immagini\architecture.PNG)
+## Generalized architecture
   
  With this slide we have a quick overview of the ICD architecture, the basic module is a text classifier, with the 
  objective to learn document representation from health records.  
@@ -279,6 +274,25 @@ $T_i\in w$ is the text sequence and $Y_i \in Υ$ is its corresponding labels.
     1) How effectively it represent multi-modality data 
     2) How to extract semantic features using Deep Neural Networks
  
+ **Word Embedding** --> Text should be transformed to a proper format that is favorable to numerical analysis. Word embedding 
+ represents words in a distributed manner, and at the same time esnures the low dimensional vectors contain semantic informations.  
+ *Word2Vec* is a typical embedding method proposed in 2013. 
+ 
+ 
+ The central word is predicted by the CBOW depending on the context of the central word.  
+ *BERT* -> Uses unsupervised pretraining techniques to generate meaningful embedding of the input sequences. BERT is based on transformer and three important word 
+ embedding features. For a given token, its input representation is constructed by summoning the corresponding token, segment and position embedding. 
+ Token embeddings convert words into vectors of fixed dimensions. Position embedding encode the location information of words into feature vectors. 
+ Segment embeddings are used to distinguish two sentences. BERT can be used for pre-training or fine-tuning on its basis. 
+ 
+ **Graph Embedding** these are the transformation of property graphs to a set of vectors. Embedding should capture the graph topology, vertex-to-vertex relationship 
+ and other relevant information about graphs.  
+ **Deep Walk** is used for learning latent rapresentations of vertices in a network, it uses local information obtained from truncated random walks and treat the short 
+ random walks as the equivalent of sentences.  
+ The DeepWalk operates in a few steps. First fore each node, several random steps are executed from that node. Then each walk is treated as a series of node-id strings
+ Given a list of these sequences, the Skip-grams algorithm trains the word2vec modelon these string sequences. By doing that graph rapresentations are learned, by encoding neighborhood similarity in a continuos vector space with a relatively small number of dimensions.
+ 
+ 
  **Deep neural Networks** have become milestone techniques and achieved the most advanced performance in 
  text classification tasks. I will get trough a few conventional neural networks that are often used as the backbone 
  of every ICD Coding problems !  
@@ -313,19 +327,13 @@ $T_i\in w$ is the text sequence and $Y_i \in Υ$ is its corresponding labels.
  appropriate ICD codes. **Manual Encoding** is time-consuming, error-prone and **Expensive**.  
  In order to *speed up* manual encoding we devote our-selfs to automate ICD coding trying to reccomend coding cadidates
  to human codes via Deep Neural networks, but there are several challenges to desing this learning based models. 
-    1) *Complex Feature Extraction* -> generally the length of EHRs is much
-       longer than that of articles in Natural language datasets. As the lenght
-       of EHRs grows the probability of information loss increases. 
-    2) *Biased label distribution* -> Due to the rarity of the disease, the 
-       majority of ICD codes have either very few or no labeled samples. Biased
-       label distribution results in low accuracy of low-frequency labels 
-    3) *Integrating External Knowledge* -> How to model the code hierarchy to 
-       capture the mutual exclusion and co-occurence between codes- 
-    4) *Model interpretability and transparancy* -> Human interpretability is 
-       necessary if deep neural networks are applied in clinical applications. 
-       The Deep Learning Models could provide explenations that help human coders
-       understand the relationship between ICD codes and  most related evidence. 
-       
+ 
+    1. *Complex Feature Extraction* -> generally the length of EHRs is much longer than that of articles in Natural language datasets. As the lenght of EHRs grows the probability of information loss increases. 
+    2. *Biased label distribution* -> Due to the rarity of the disease, the majority of ICD codes have either very few or no labeled samples. Biased label distribution results in low accuracy of low-frequency labels 
+    3. *Integrating External Knowledge* -> How to model the code hierarchy to capture the mutual exclusion and co-occurence between codes- 
+    4. *Model interpretability and transparancy* -> Human interpretability is necessary if deep neural networks are applied in clinical applications. The Deep Learning Models could provide explenations that help human coders understand the relationship between ICD codes and  most related evidence. 
+     
+
 ## Complex Feature extraction 
        
 Feature extraction transforms the raw data into group of features with physical
@@ -513,6 +521,10 @@ It is important to study more efficient approaches that concentrate on
 improving few shot codes for rare diseases and to understand the diversity of
 terminology. It is resonable that ICD coding will explore various deep neural
 networks in the future. 
+
+
+
+
 
 
 
